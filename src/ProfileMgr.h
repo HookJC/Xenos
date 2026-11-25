@@ -22,6 +22,7 @@ public:
         uint32_t delay = 0;             // Delay before injection
         uint32_t period = 0;            // Delay between images
         uint32_t skipProc = 0;          // Skip N first processes
+        uint32_t indefTime = 0;         // Inject indefinitely delay time seconds
         
         bool hijack = false;            // Hijack existing thread
         bool unlink = false;            // Unlink image after injection

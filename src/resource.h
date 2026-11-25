@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ generated include file.
-// Used by Xenos.rc
+// Microsoft Visual C++ 生成的包含文件。
+// 供 Xenos.rc 使用
 //
 #define IDC_MYICON                      2
 #define IDD_WIN32_TEMPLATE_DIALOG       102
@@ -63,6 +63,8 @@
 #define IDC_CHECK1                      1031
 #define IDC_KRN_HANDLE                  1031
 #define IDC_SKIP                        1032
+#define IDC_SKIP2                       1033
+#define IDC_INDEFINITELY_TIME           1033
 #define ID_TOOLS_EJECTMODULES           32772
 #define ID_TOOLS_PROTECTSELF            32773
 #define ID_TOOLS_PROTECT                32774

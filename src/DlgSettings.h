@@ -61,6 +61,7 @@ private:
     MSG_HANDLER( OnOK );
     MSG_HANDLER( OnCancel );
     MSG_HANDLER( OnSelChange );
+    MSG_HANDLER( OnIndefinitely );
 private:
     ProfileMgr& _profileMgr;                // Configuration manager
     blackbone::pe::vecExports _exports;     // Image exports
@@ -79,6 +80,7 @@ private:
     ctrl::EditBox  _delay;          // Delay before inject
     ctrl::EditBox  _period;         // Period between images
     ctrl::EditBox  _skipProc;       // Skip N first processes
+    ctrl::EditBox  _indefTime;      // 
 
     ctrl::Button _injClose;         // Close application after injection
     ctrl::Button _unlink;           // Unlink image after injection   

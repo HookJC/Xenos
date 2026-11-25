@@ -9,6 +9,7 @@ DlgSettings::DlgSettings( ProfileMgr& cfgMgr )
     _events[CBN_SELCHANGE]      = static_cast<Dialog::fnDlgProc>(&DlgSettings::OnSelChange);
     _events[ID_SETTINGS_OK]     = static_cast<Dialog::fnDlgProc>(&DlgSettings::OnOK);
     _events[ID_SETTINGS_CANCEL] = static_cast<Dialog::fnDlgProc>(&DlgSettings::OnCancel);
+    _events[IDC_INJ_EACH]       = static_cast<Dialog::fnDlgProc>(&DlgSettings::OnIndefinitely);
 }
 
 DlgSettings::~DlgSettings()
@@ -36,6 +37,7 @@ INT_PTR DlgSettings::OnInit( HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
     _period.Attach( _hwnd, IDC_PERIOD );
 
     _skipProc.Attach( _hwnd, IDC_SKIP );
+    _indefTime.Attach( _hwnd, IDC_INDEFINITELY_TIME );
 
     _mmapOptions.addLdrRef.Attach( GetDlgItem( _hwnd, IDC_LDR_REF ) );
     _mmapOptions.manualInmport.Attach( GetDlgItem( _hwnd, IDC_MANUAL_IMP ) );
@@ -98,6 +100,15 @@ INT_PTR DlgSettings::OnSelChange( HWND hDlg, UINT message, WPARAM wParam, LPARAM
     }
 
     return TRUE;
+}
+
+INT_PTR DlgSettings::OnIndefinitely(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
+    
+    if (message == WM_COMMAND) {
+        _injIndef.checked() ? _indefTime.enable() : _indefTime.disable();
+    }
+
+    return FALSE;
 }
 
 /// <summary>
@@ -178,11 +189,13 @@ DWORD DlgSettings::UpdateFromConfig()
     _delay.text( std::to_wstring( cfg.delay ) );
     _period.text( std::to_wstring( cfg.period ) );
     _skipProc.text( std::to_wstring( cfg.skipProc ) );
+    _indefTime.text( std::to_wstring( cfg.indefTime ) );
 
     _unlink.checked( cfg.unlink );
     _erasePE.checked( cfg.erasePE );
     _injClose.checked( cfg.close );
-    _injIndef.checked( cfg.injIndef );
+    _injIndef.checked( cfg.injIndef );    
+    cfg.injIndef ? _indefTime.enable() : _indefTime.disable();
 
     _lastSelected = cfg.injectMode;
     _injectionType.selection( cfg.injectMode );
@@ -218,6 +231,7 @@ DWORD DlgSettings::SaveConfig()
     cfg.period         = _period.integer();
     cfg.skipProc       = _skipProc.integer();
     cfg.injIndef       = _injIndef.checked();
+    cfg.indefTime      = _indefTime.integer();
 
     _profileMgr.Save();
     return ERROR_SUCCESS;
@@ -246,16 +260,19 @@ void DlgSettings::UpdateInterface()
         _procCmdLine.enable();
         _skipProc.disable();
         _injIndef.disable();
+        _indefTime.disable();
         break;
     case Existing:
         _procCmdLine.disable();
         _skipProc.disable();
         _injIndef.disable();
+        _indefTime.disable();
         break;
     case ManualLaunch:
         _procCmdLine.disable();
         _skipProc.enable();
         _injIndef.enable();
+        _injIndef.checked() ? _indefTime.enable() : _indefTime.disable();
         break;
     };
 

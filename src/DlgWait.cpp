@@ -39,8 +39,20 @@ INT_PTR DlgWait::OnCloseBtn( HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 /// <returns>Error code</returns>
 NTSTATUS DlgWait::WaitForInjection()
 {
-    for (bool inject = true; inject && _status != STATUS_REQUEST_ABORTED; inject = _context.cfg.injIndef)
+    uint32_t ncount = 0;
+
+    for (bool inject = true; inject && _status != STATUS_REQUEST_ABORTED; inject = _context.cfg.injIndef) {
+        if (ncount > 0 && _context.cfg.indefTime > 0) {
+            int delayMS = _context.cfg.indefTime;
+            while (delayMS >= 10 && _context.waitActive) {
+                Sleep(10);
+                delayMS -= 10;
+            }
+        }
         _status = _core.InjectMultiple( &_context );
+        ncount++;
+        xlog::Normal( "%d. process %ls inject 0x%08X", ncount, _context.procPath.c_str(), _status);
+    }
 
     CloseDialog();
     return _status;
